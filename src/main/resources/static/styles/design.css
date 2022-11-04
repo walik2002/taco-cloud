@@ -1,0 +1,16 @@
+body{
+    margin: auto;
+    width: 600px;
+}
+.grid{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.ingredient-group{
+    width: 250px;
+}
+.creation button{
+    margin: 5px 5px 10px 0px;
+    padding: 5px;
+}
