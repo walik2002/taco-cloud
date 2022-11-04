@@ -1,0 +1,6 @@
+.validationError{
+    color: red;
+}
+div.validationError{
+    margin-top: 10px;
+}
