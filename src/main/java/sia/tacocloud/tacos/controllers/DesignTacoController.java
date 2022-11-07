@@ -10,15 +10,14 @@ import sia.tacocloud.tacos.models.Ingredient;
 import sia.tacocloud.tacos.models.Ingredient.Type;
 import sia.tacocloud.tacos.models.Taco;
 import sia.tacocloud.tacos.models.TacoOrder;
+import sia.tacocloud.tacos.models.TacoUDT;
 import sia.tacocloud.tacos.repos.IngredientRepository;
 
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("tacoOrder")
@@ -63,8 +62,7 @@ public class DesignTacoController {
         if(errors.hasErrors())
             return "design";
 
-        tacoOrder.addTaco(taco);
-        log.info("Processing taco: {}",taco);
+        tacoOrder.addTaco(new TacoUDT(taco.getName(),taco.getIngredients()));
 
         return "redirect:/orders/current";
     }
