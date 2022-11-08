@@ -6,6 +6,9 @@ spring:
     hibernate:
       ddl-auto: create-drop
       defer-datasource-initialization: true
+  data:
+    rest:
+      base-path: /data-api
 taco:
   orders:
     page-size: 10

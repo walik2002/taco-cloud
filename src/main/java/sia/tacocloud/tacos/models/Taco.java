@@ -1,6 +1,7 @@
 package sia.tacocloud.tacos.models;
 
 import lombok.Data;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Data
 @Entity
+@RestResource(rel = "tacos",path = "tacos") //Аннотация @RestResource позволяет дать сущности любое имя отношения и путь
 public class Taco {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
