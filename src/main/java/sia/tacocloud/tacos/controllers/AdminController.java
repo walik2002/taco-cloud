@@ -21,6 +21,7 @@ public class AdminController {
     public String showAdminPage(){
         return "admin";
     }
+
     @PostMapping("/deleteOrders")
     public String deleteAllOrders(){
         orderAdminService.deleteAllOrders();
