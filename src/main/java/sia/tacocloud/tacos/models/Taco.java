@@ -1,6 +1,7 @@
 package sia.tacocloud.tacos.models;
 
 import lombok.Data;
+import org.springframework.security.access.prepost.PostAuthorize;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -28,4 +29,5 @@ public class Taco {
     public void addIngredient(Ingredient ingredient) {
         this.ingredients.add(ingredient);
     }
+
 }

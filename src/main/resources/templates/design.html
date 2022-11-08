@@ -7,11 +7,14 @@
     <link rel="stylesheet" th:href="@{/styles/validationError.css}">
 </head>
 <body>
+    <form method="POST" th:action="@{/logout}">
+        <input type="submit" value="Logout"/>
+    </form>
     <h1>Design your taco</h1>
     <img th:src="@{/images/TacoCloud.png}"/>
 
     <!--/*@thymesVar id="taco" type="sia.tacocloud.tacos.models."*/-->
-    <form method="post" th:object="${taco}">
+    <form th:action="@{/design}" method="post" th:object="${taco}">
         <div class="grid">
             <div class="ingredient-group" id="wraps">
                 <h3>
