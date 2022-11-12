@@ -1,14 +1,19 @@
 spring:
   datasource:
     generate-unique-name: false
-    name: taco_cloud
+    name: tacocloud
   jpa:
     hibernate:
       ddl-auto: create-drop
       defer-datasource-initialization: true
   data:
     rest:
-      base-path: /data-api
+      base-path: /api
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
 taco:
   orders:
     page-size: 10

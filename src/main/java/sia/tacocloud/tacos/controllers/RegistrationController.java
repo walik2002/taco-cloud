@@ -9,26 +9,27 @@ import sia.tacocloud.tacos.security.RegistrationForm;
 import sia.tacocloud.tacos.repos.UserRepository;
 
 @Controller
-@RequestMapping("/register")//будет обрабатывать запросы с путем /register
+@RequestMapping("/register")
 public class RegistrationController {
 
-    private UserRepository userRepo; //для работы с бд
-    private PasswordEncoder passwordEncoder;//шифрование паролей
+    private UserRepository userRepo;
+    private PasswordEncoder passwordEncoder;
 
-    public RegistrationController(UserRepository userRepo, PasswordEncoder passwordEncoder) {
+    public RegistrationController(
+            UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
-    public String registerForm(){
-        return "registration";//возвращает логическое имя представления registration
+    public String registerForm() {
+        return "registration";
     }
 
     @PostMapping
-    public String processRegistration(RegistrationForm form){
+    public String processRegistration(RegistrationForm form) {
         userRepo.save(form.toUser(passwordEncoder));
-
         return "redirect:/login";
     }
+
 }
