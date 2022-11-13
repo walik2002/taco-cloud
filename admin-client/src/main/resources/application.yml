@@ -9,14 +9,13 @@ spring:
       client:
         # end::provider_config_0[]
         registration:
-          taco-admin-client-oidc:
+          taco-admin-client:
             provider: tacocloud
             client-id: taco-admin-client
             client-secret: secret
             authorization-grant-type: authorization_code
-            redirect-uri: "http://client:9090/login/oauth2/code/{registrationId}"
-            scope: openid,writeIngredients,deleteIngredients
-            client-name: taco-admin-client-oidc
+            redirect-uri: "http://127.0.0.1:9090/login/oauth2/code/{registrationId}"
+            scope: writeIngredients,deleteIngredients,openid
         provider:
           tacocloud:
             issuer-uri: http://auth-server:9000

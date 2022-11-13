@@ -36,51 +36,39 @@ import com.nimbusds.jose.proc.SecurityContext;
 
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
-
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-        OAuth2AuthorizationServerConfiguration
-                .applyDefaultSecurity(http);
-        return http
-                .formLogin(Customizer.withDefaults())
-                .build();
+        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+        return http.formLogin(Customizer.withDefaults()).build();
     }
 
-    // @formatter:off
     @Bean
-    public RegisteredClientRepository registeredClientRepository(
-            PasswordEncoder passwordEncoder) {
-        RegisteredClient registeredClient =
-                RegisteredClient.withId(UUID.randomUUID().toString())
-                        .clientId("taco-admin-client")
-                        .clientSecret(passwordEncoder.encode("secret"))
-                        .clientAuthenticationMethod(
-                                ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                        .redirectUri(
-                                "http://client:9090/login/oauth2/code/taco-admin-client-oidc")
-                        /*.redirectUri(
-                                "http://client:9090/authorized")*/
-                        .scope("writeIngredients")
-                        .scope("deleteIngredients")
-                        .scope(OidcScopes.OPENID)
-                        .clientSettings(
-                                ClientSettings.builder().requireAuthorizationConsent(true).build())
-                        .build();
+    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
+        // @formatter:off
+        RegisteredClient registeredClient = RegisteredClient
+                .withId(UUID.randomUUID().toString())
+                .clientId("taco-admin-client")
+                .clientSecret(passwordEncoder.encode("secret"))//密钥
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .redirectUri("http://127.0.0.1:9090/login/oauth2/code/taco-admin-client")
+                .scope("writeIngredients")
+                .scope("deleteIngredients")
+                .scope(OidcScopes.OPENID)
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .build();
         return new InMemoryRegisteredClientRepository(registeredClient);
     }
-    // @formatter:on
 
     @Bean
     public ProviderSettings providerSettings() {
-        return  ProviderSettings.builder().issuer("http://auth-server:9000").build();
+        return ProviderSettings.builder().issuer("http://auth-server:9000").build();
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource()
-            throws NoSuchAlgorithmException {
+    public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException {
         RSAKey rsaKey = generateRsa();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
@@ -90,10 +78,7 @@ public class AuthorizationServerConfig {
         KeyPair keyPair = generateRsaKey();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        return new RSAKey.Builder(publicKey)
-                .privateKey(privateKey)
-                .keyID(UUID.randomUUID().toString())
-                .build();
+        return new RSAKey.Builder(publicKey).privateKey(privateKey).keyID(UUID.randomUUID().toString()).build();
     }
 
     private static KeyPair generateRsaKey() throws NoSuchAlgorithmException {

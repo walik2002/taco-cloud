@@ -25,7 +25,6 @@ public class DevelopmentConfig {
     @Bean
     public CommandLineRunner dataLoader(IngredientRepository repo,
                                         UserRepository userRepo,
-                                        PasswordEncoder encoder,
                                         TacoRepository tacoRepository) { // user repo for ease of testing with a built-in user
         return new CommandLineRunner() {
             @Override
@@ -82,8 +81,8 @@ public class DevelopmentConfig {
                         lettuce, salsa));
                 tacoRepository.save(taco3);
 
-                userRepo.save(new User("walentin",encoder.encode("1234"),"Walentin","st.Leninskaya",
-                        "Mogilev","Belarus","211030","+375333212233"));
+                /*userRepo.save(new User("walentin",encoder.encode("1234"),"Walentin","st.Leninskaya",
+                        "Mogilev","Belarus","211030","+375333212233"));*/
             }
         };
     }

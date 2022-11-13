@@ -16,13 +16,10 @@ public class AuthorizationServerApplication {
     }
 
     @Bean
-    public ApplicationRunner dataLoader(
-            UserRepository userRepository, PasswordEncoder passwordEncoder
-    ){
+    public ApplicationRunner dataLoader(UserRepository repo, PasswordEncoder encoder) {
         return args -> {
-            userRepository.save(
-                    new User("walentin","belousow","tacocloud", passwordEncoder.encode("1234"), "ROLE_ADMIN")
-            );
+            repo.save(new User(1L, "a1", encoder.encode("1"), "ROLE_ADMIN"));
+            repo.save(new User(2L, "a2", encoder.encode("1"), "ROLE_ADMIN"));
         };
     }
 }

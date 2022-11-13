@@ -21,17 +21,9 @@ import sia.tacocloud.adminclient.services.RestIngredientService;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors()
-                .and()
-                .csrf()
-                .disable()
-                .authorizeHttpRequests()
-                .antMatchers("/**").authenticated()
-                .and()
-                .oauth2Login(oauth2login ->
-                        oauth2login.loginPage("/oauth2/authorization/taco-admin-client-oidc"))
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
+                .oauth2Login(oauth2Login -> oauth2Login.loginPage("/oauth2/authorization/taco-admin-client"))
                 .oauth2Client(withDefaults());
         return http.build();
     }

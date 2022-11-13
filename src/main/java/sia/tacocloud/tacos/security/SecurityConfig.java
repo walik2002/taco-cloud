@@ -33,42 +33,31 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.util.Collection;
 
 @SuppressWarnings("deprecation")
-@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig{
-
-
+public class SecurityConfig {
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-       return http
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        // @formatter:off
+        return http
                 .headers().frameOptions().sameOrigin()
                 .and()
-                // Make the H2 Console page not to do CSRF inspection
                 .csrf()
                 .ignoringAntMatchers("/h2-console/**")
                 .and()
                 .authorizeRequests()
-                // When visiting H2 Console, you don't need to log in to the system first
                 .antMatchers("/h2-console/**").permitAll()
                 .and()
-
-                // API you need to intercept
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/ingredients")
                 .hasAuthority("SCOPE_writeIngredients")
                 .antMatchers(HttpMethod.DELETE, "/api/ingredients")
                 .hasAuthority("SCOPE_deleteIngredients")
+                .antMatchers("/api/**").authenticated()
                 .and()
-                // Open ResourceServer
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt())
                 .build();
-    }
+        // @formatter:on
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
     }
-
 
 }

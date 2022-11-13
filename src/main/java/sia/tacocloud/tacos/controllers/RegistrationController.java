@@ -11,7 +11,7 @@ import sia.tacocloud.tacos.repos.UserRepository;
 @Controller
 @RequestMapping("/register")
 public class RegistrationController {
-
+/*
     private UserRepository userRepo;
     private PasswordEncoder passwordEncoder;
 
@@ -30,6 +30,6 @@ public class RegistrationController {
     public String processRegistration(RegistrationForm form) {
         userRepo.save(form.toUser(passwordEncoder));
         return "redirect:/login";
-    }
+    }*/
 
 }
