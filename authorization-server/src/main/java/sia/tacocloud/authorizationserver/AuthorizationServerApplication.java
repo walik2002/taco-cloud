@@ -21,10 +21,7 @@ public class AuthorizationServerApplication {
     ){
         return args -> {
             userRepository.save(
-                    new User("walentin", passwordEncoder.encode("1234"), "ROLE_ADMIN" )
-            );
-            userRepository.save(
-                    new User("tacocloud", passwordEncoder.encode("1234"), "ROLE_ADMIN" )
+                    new User("walentin","belousow","tacocloud", passwordEncoder.encode("1234"), "ROLE_ADMIN")
             );
         };
     }

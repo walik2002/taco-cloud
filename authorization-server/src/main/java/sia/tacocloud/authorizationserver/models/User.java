@@ -4,60 +4,36 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
 
-@Data
+
 @Entity
-@RequiredArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PUBLIC,force = true)
+@Data
 @Table(name = "\"user\"")
-public class User implements UserDetails {
-
-    public static final long serialVersionUID = 1L;
+public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
 
-    private final String username;
-    private final String password;
-    private final String role;
+    @Column(length = 60)
+    private String password;
 
+    private String role;
+    private boolean enabled = false;
 
-    @Override
-    @Transient
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
+    public User(String firstName, String lastName, String email, String password, String role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
+    public User() {
 
-    @Override
-    @Transient
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    @Transient
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    @Transient
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    @Transient
-    public boolean isEnabled() {
-        return true;
     }
 }

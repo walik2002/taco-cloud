@@ -3,7 +3,9 @@ package sia.tacocloud.tacos.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation
         .authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,51 +15,54 @@ import org.springframework.security.config.annotation.web
         .configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web
         .configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.Collection;
 
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig{
 
-    @Autowired
-    private UserDetailsService userDetailsService;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+       return http
+                .headers().frameOptions().sameOrigin()
+                .and()
+                // Make the H2 Console page not to do CSRF inspection
+                .csrf()
+                .ignoringAntMatchers("/h2-console/**")
+                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS).permitAll() // needed for Angular/CORS
+                // When visiting H2 Console, you don't need to log in to the system first
+                .antMatchers("/h2-console/**").permitAll()
+                .and()
+
+                // API you need to intercept
+                .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/ingredients")
                 .hasAuthority("SCOPE_writeIngredients")
-                .antMatchers(HttpMethod.DELETE, "/api//ingredients")
+                .antMatchers(HttpMethod.DELETE, "/api/ingredients")
                 .hasAuthority("SCOPE_deleteIngredients")
-                .antMatchers("/api//tacos", "/api//orders/**")
-                .permitAll()
-                .antMatchers("/**").access("permitAll")
                 .and()
+                // Open ResourceServer
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt())
-
-                .httpBasic()
-                .realmName("Taco Cloud")
-
-                .and()
-                .logout()
-                .logoutSuccessUrl("/")
-
-                .and()
-                .csrf()
-                .ignoringAntMatchers("/h2-console/**", "/api/**")
-
-                // Allow pages to be loaded in frames from the same origin; needed for H2-Console
-                .and()
-                .headers()
-                .frameOptions()
-                .sameOrigin()
-        ;
+                .build();
     }
 
     @Bean
@@ -65,14 +70,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth)
-            throws Exception {
-
-        auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(encoder());
-
-    }
 
 }

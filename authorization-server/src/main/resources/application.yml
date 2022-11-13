@@ -7,3 +7,11 @@ management:
     web:
       exposure:
         include: '*'
+spring:
+  datasource:
+    generate-unique-name: false
+    name: tacocloud
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      defer-datasource-initialization: true

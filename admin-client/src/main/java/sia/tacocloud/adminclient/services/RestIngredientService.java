@@ -2,6 +2,8 @@ package sia.tacocloud.adminclient.services;
 
 import java.io.IOException;
 import java.util.Arrays;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;

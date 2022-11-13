@@ -25,6 +25,7 @@ import org.springframework.security.oauth2.server.authorization.client
         .RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client
         .RegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -59,12 +60,14 @@ public class AuthorizationServerConfig {
                         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                         .redirectUri(
-                                "http://127.0.0.1:9090/login/oauth2/code/taco-admin-client")
+                                "http://client:9090/login/oauth2/code/taco-admin-client-oidc")
+                        /*.redirectUri(
+                                "http://client:9090/authorized")*/
                         .scope("writeIngredients")
                         .scope("deleteIngredients")
                         .scope(OidcScopes.OPENID)
                         .clientSettings(
-                                clientSettings -> clientSettings.requireUserConsent(true))
+                                ClientSettings.builder().requireAuthorizationConsent(true).build())
                         .build();
         return new InMemoryRegisteredClientRepository(registeredClient);
     }
@@ -72,7 +75,7 @@ public class AuthorizationServerConfig {
 
     @Bean
     public ProviderSettings providerSettings() {
-        return new ProviderSettings().issuer("http://localhost:9000");
+        return  ProviderSettings.builder().issuer("http://auth-server:9000").build();
     }
 
     @Bean
